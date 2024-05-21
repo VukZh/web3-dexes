@@ -1,13 +1,19 @@
+import "@mantine/core/styles.css";
+import {MantineProvider} from "@mantine/core";
+import {ContextProvider} from "./state/ContextProvider.tsx";
+import {RootComponent} from "./components/RootComponent.tsx";
+
 import "./App.css";
 
 function App() {
 
   return (
-    <>
-      <div>
-        web3-dex
-      </div>
-    </>
+    <MantineProvider defaultColorScheme="dark">
+      <ContextProvider>
+        <RootComponent/>
+      </ContextProvider>
+    </MantineProvider>
+
   );
 }
 
