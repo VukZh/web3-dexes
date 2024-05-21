@@ -1,5 +1,5 @@
 import {FC, useState} from "react";
-import {Button, Card, Flex, Text} from "@mantine/core";
+import {Button, Card, Flex, NumberInput, Popover, Stack, Text, TextInput} from "@mantine/core";
 import style from "./PairItem.module.css";
 import {swapFactories, tokensAddresses} from "../state/constants.ts";
 import {createPublicClient, http} from "viem";
@@ -23,6 +23,7 @@ export const PairItem: FC<PairItemType> = ({
                                            }) => {
   const [price, setPrice] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  const [amountIn, setAmountIn] = useState(0);
 
   async function getPrice() {
     setLoading(true);
@@ -60,9 +61,27 @@ export const PairItem: FC<PairItemType> = ({
       wrap="wrap"
       ml={5}
     >
-      <Text size="xs" c="orange">{token1}/{token2}</Text>
+
+      {price ?
+
+        <Popover width={300} trapFocus position="bottom" withArrow shadow="md">
+          <Popover.Target>
+            <Text size="xs" c="orange" className={style.tokensWprice}>{token1}/{token2}</Text>
+          </Popover.Target>
+          <Popover.Dropdown style={{width: 250}}>
+            <Stack justify="space-between" gap="xs" align="center">
+              <NumberInput label={token1} size="xs" min={0} value={amountIn} onChange={(e) => setAmountIn(e)}/>
+              <Text size="xs" c="darkgray">{amountIn * price} {token2}</Text>
+              <Button size="xs" variant="light" disabled={!amountIn}>SWAP</Button>
+            </Stack>
+          </Popover.Dropdown>
+        </Popover>
+        : <Text size="xs" c="orange" className={style.tokens}>{token1}/{token2}</Text>
+
+      }
+
       <Text size="xs" style={{flexGrow: 1}} fw={700}
-            c={isNaN(price) ? "red" : "lime"}>Price: {isNaN(price) ? "not exist" : price === 0 ? "" : price}</Text>
+            c={isNaN(price) ? "red" : price === 0 ? "yellow" : "lime"}>Price: {isNaN(price) ? "not exist" : price === 0 ? "" : price}</Text>
       <Button size="xs" variant="light" loading={loading} loaderProps={{"size": "xs", type: "oval"}} onClick={getPrice}>GET
         PRICE</Button>
     </Flex>
