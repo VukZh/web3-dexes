@@ -3,10 +3,10 @@
 import {Button} from "@mantine/core";
 import {IconWallet} from "@tabler/icons-react";
 import {createWalletClient, custom} from "viem";
-import {arbitrum, polygon} from "viem/chains";
+import {arbitrum, polygon, bsc} from "viem/chains";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-import {FC, use, useContext, useEffect} from "react";
+import {FC, use, useContext, useEffect, useRef} from "react";
 import {Context} from "../state/ContextProvider.tsx";
 // @ts-ignore
 import {ErrorType} from "viem/_types/errors/utils";
@@ -30,22 +30,25 @@ export const Wallet: FC = () => {
   const {walletAddress, setWalletAddress, activeChain, setActiveChain} = useContext(Context);
 
   const clientWallet = createWalletClient({
-    chain: activeChain === "Polygon" ? polygon : arbitrum,
+    chain: activeChain === "Polygon" ? polygon : activeChain === "Arbitrum" ? arbitrum : bsc,
     transport: custom(window.ethereum!),
   });
 
+  const prevChain = useRef(activeChain);
+
 
   useEffect(() => {
-    const newChain: any = activeChain === "Polygon" ? polygon : arbitrum;
+    const newChain: any = activeChain === "Polygon" ? polygon : activeChain === "Arbitrum" ? arbitrum : bsc;
 
     const switchChain = async () => {
       await clientWallet.switchChain({id: newChain.id});
     };
     try {
       switchChain().then(() => {
-        activeChain === "Polygon" ? setActiveChain("Polygon") : setActiveChain("Arbitrum");
+        activeChain === "Polygon" ? setActiveChain("Polygon") : activeChain === "Arbitrum" ? setActiveChain("Arbitrum") : setActiveChain("BSC");
+        prevChain.current = activeChain;
       }).catch(() => {
-        activeChain === "Polygon" ? setActiveChain("Arbitrum") : setActiveChain("Polygon");
+        setActiveChain(prevChain.current);
       });
 
     } catch (e: any) {
