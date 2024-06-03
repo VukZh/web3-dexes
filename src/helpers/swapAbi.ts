@@ -1,18 +1,22 @@
-export const GetPriceContractAbi =
-  [{"inputs": [], "name": "ApproveFailed", "type": "error"}, {
+export const swapContractAbi =
+  [{"inputs": [], "name": "AllowanceFailed", "type": "error"}, {
     "inputs": [],
-    "name": "PairDoesntExist",
+    "name": "ApproveFailed",
     "type": "error"
-  }, {"inputs": [], "name": "TransferFailed", "type": "error"}, {
-    "inputs": [{
+  }, {"inputs": [], "name": "PairDoesntExist", "type": "error"}, {
+    "inputs": [],
+    "name": "TransferFailed",
+    "type": "error"
+  }, {
+    "inputs": [{"internalType": "address", "name": "router", "type": "address"}, {
+      "internalType": "uint256",
+      "name": "amountIn",
+      "type": "uint256"
+    }, {"internalType": "address", "name": "tokenIn", "type": "address"}, {
       "internalType": "address",
-      "name": "router",
+      "name": "tokenOut",
       "type": "address"
-    }, {"internalType": "uint256", "name": "amountIn", "type": "uint256"}, {
-      "internalType": "address",
-      "name": "tokenIn",
-      "type": "address"
-    }, {"internalType": "address", "name": "tokenOut", "type": "address"}],
+    }],
     "name": "getAmountsOut",
     "outputs": [{"internalType": "uint256[]", "name": "amounts", "type": "uint256[]"}],
     "stateMutability": "view",
