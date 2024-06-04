@@ -1,0 +1,20 @@
+.wrapper {
+    width: 500px;
+    margin: 4px 0;
+    padding: 0;
+}
+
+.tokens {
+    padding: 5px;
+}
+
+.tokensWprice {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: black;
+}
+
+.tokensWprice:hover {
+    background-color: rgb(25,25,25);
+}

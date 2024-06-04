@@ -6,6 +6,7 @@ import {Context} from "../state/ContextProvider";
 import {Wallet} from "./Wallet.tsx";
 import {Swap} from "./Swap.tsx";
 import {GetAllPrices} from "./GetAllPrices.tsx";
+import {Arbitrage} from "./Arbitrage.tsx";
 
 export const RootComponent = () => {
   const {activeTab, setActiveTab, walletAddress, activeChain, setActiveChain} = useContext(Context);
@@ -39,7 +40,9 @@ export const RootComponent = () => {
         <SegmentedControl size="lg" radius="md" data={tabs} value={activeTab} onChange={setActiveTab}/>
         <br/>
         {/*<GetAllPrices></GetAllPrices>*/}
-        <Swap/>
+        {activeTab === "SWAP"  &&  <Swap/>}
+        {activeTab === "ARBITRAGE"  &&  <Arbitrage/>}
+
       </AppShell.Main>
       <AppShell.Footer style={{display: "flex", alignItems: "center", justifyContent: "end"}}>
         <Text

@@ -1,9 +1,9 @@
-import {PairItem} from "./PairItem.tsx";
+import {SwapItem} from "./SwapItem.tsx";
 import {useDebouncedState} from "@mantine/hooks";
 import {TextInput, Text, Flex, Stack} from "@mantine/core";
 import {IconSearch} from "@tabler/icons-react";
 import {availablePairs, dexesInChaines} from "../state/constants.ts";
-import {useContext, useEffect} from "react";
+import {useContext} from "react";
 import {Context} from "../state/ContextProvider.tsx";
 
 export const Swap = () => {
@@ -64,8 +64,8 @@ export const Swap = () => {
         >
           <Text c="teal" align="center">{(dexesInChaines[activeChain.toLowerCase()][0]).toUpperCase()}</Text>
           {dex1CoinsArray.map((coin) => (
-            <PairItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}
-                      token1={coin.token1} token2={coin.token2}></PairItem>
+            <SwapItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}
+                      token1={coin.token1} token2={coin.token2}></SwapItem>
           ))}
         </Stack>
         <Stack
@@ -76,8 +76,8 @@ export const Swap = () => {
         >
           <Text c="teal" align="center">{(dexesInChaines[activeChain.toLowerCase()][1]).toUpperCase()}</Text>
           {dex2CoinsArray.map((coin) => (
-            <PairItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}
-                      token1={coin.token1} token2={coin.token2}></PairItem>
+            <SwapItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}
+                      token1={coin.token1} token2={coin.token2}></SwapItem>
           ))}
         </Stack>
         <Stack
@@ -88,8 +88,8 @@ export const Swap = () => {
         >
           <Text c="teal" align="center">{(dexesInChaines[activeChain.toLowerCase()][2]).toUpperCase()}</Text>
           {dex3CoinsArray.map((coin) => (
-            <PairItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}
-                      token1={coin.token1} token2={coin.token2}></PairItem>
+            <SwapItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}
+                      token1={coin.token1} token2={coin.token2}></SwapItem>
           ))}
         </Stack>
       </Flex>

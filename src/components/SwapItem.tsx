@@ -1,6 +1,6 @@
 import {FC, useContext, useState} from "react";
-import {Button, Card, Flex, NumberInput, Popover, Stack, Text, TextInput} from "@mantine/core";
-import style from "./PairItem.module.css";
+import {Button, Card, Flex, NumberInput, Popover, Stack, Text} from "@mantine/core";
+import style from "./SwapItem.module.css";
 import {swapFactories, swapRoutes, tokensAddresses} from "../state/constants.ts";
 import {createPublicClient, createWalletClient, custom, http} from "viem";
 import {arbitrum, polygon, bsc} from "viem/chains";
@@ -18,7 +18,7 @@ type PairItemType = {
   token2: string,
 }
 
-export const PairItem: FC<PairItemType> = ({
+export const SwapItem: FC<PairItemType> = ({
                                              chain,
                                              dex,
                                              token1,
@@ -120,6 +120,8 @@ export const PairItem: FC<PairItemType> = ({
     const address = chain === "arbitrum" ? process.env.GET_PRICE_CONTRACT_ARBITRUM_ADDRESS : chain === "polygon" ? process.env.GET_PRICE_CONTRACT_POLYGON_ADDRESS : process.env.GET_PRICE_CONTRACT_BSC_ADDRESS;
     console.log("address", address);
 
+    const gasLimit  = chain === "arbitrum" ? 462800n : chain === "polygon" ? 694200n : 55000n;
+
 
     try {
 
@@ -139,7 +141,7 @@ export const PairItem: FC<PairItemType> = ({
         functionName: 'approve',
         account,
         args: [address, _amountIn],
-        gas: 694200n,
+        gas: gasLimit,
       })
       console.log("res", res)
       await publicClient.waitForTransactionReceipt(
@@ -152,7 +154,7 @@ export const PairItem: FC<PairItemType> = ({
         functionName: 'swapTokens',
         account,
         args: [router, tokenIn, tokenOut, _amountIn, amountOutMin, to, deadline],
-        gas: 694200n,
+        gas: BigInt(Number(gasLimit) * 1.4),
       })
       console.log("res2", res2)
     } catch

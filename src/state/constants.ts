@@ -284,3 +284,7 @@ export const availablePairs = [
   'WMATIC-LDO', 'LDO-WMATIC'
 ];
 
+export const availableTokens = [
+  'USDT', 'WBTC', 'WETH', 'UNI', 'SUSHI', 'LINK', 'WOO', 'OMNI', 'STG', 'ARB', 'CAKE', 'AAVE', 'SAND', 'CRV', 'WBNB', 'COMP', 'MATIC', 'WMATIC', 'LDO',
+];
+
