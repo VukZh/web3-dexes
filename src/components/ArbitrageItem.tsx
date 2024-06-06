@@ -21,9 +21,9 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
                                                        token1,
                                                        token2,
                                                      }) => {
-  const [prices, setPrices] = useState<Array<number>>([0, 0, 0]);
+  const [prices, setPrices] = useState<number>([0, 0, 0]);
   const [loading, setLoading] = useState(false);
-  const [amountIns, setAmountIns] = useState<Array<number>>([0, 0, 0]);
+  const [amountIn, setAmountIn] = useState<Array<number>>(0);
   const [tokensFromDexes, setTokensFromDexes] = useState<Array<number>>([0, 0, 0]);
 
   const {walletAddress} = useContext(Context);
@@ -116,10 +116,10 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
   //   }
   // }
   //
-  // const handleSetAmountIn = (e: string | number) => {
-  //   setTokensFromDex(0)
-  //   setAmountIn(Number(e))
-  // }
+  const handleSetAmountIn = (e: string | number) => {
+    setTokensFromDexes([0,0,0])
+    setAmountIn(e)
+  }
   //
   // const handleSwap = async () => {
   //
@@ -208,28 +208,29 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
       ml={5}
     >
 
-      {prices[0] ?
+      {(prices[0] && prices[1] || prices[1] && prices[2] || prices[0] && prices[2])?
 
         <Popover width={300} trapFocus position="bottom" withArrow shadow="md">
           <Popover.Target>
             <Text size="xs" c="orange" className={style.tokensWprice}>{token1}/{token2}</Text>
           </Popover.Target>
-          {/*<Popover.Dropdown style={{width: 380}}>*/}
-          {/*  <Stack justify="space-between" gap="xs" align="center" style={{padding: "0"}}>*/}
-          {/*    <NumberInput label={token1} size="xs" min={0} value={amountIn} onChange={handleSetAmountIn}*/}
-          {/*                 style={{width: "100%"}}/>*/}
-          {/*    <Text size="xs" c="darkgray"> = {amountIn * price} {token2}</Text>*/}
-          {/*    <Flex justify="space-between" style={{width: "100%"}} align="center">*/}
+          <Popover.Dropdown style={{width: 380}}>
+            <Stack justify="space-between" gap="xs" align="center" style={{padding: "0"}}>
+              <NumberInput label={token1} size="xs" min={0} value={amountIn} onChange={handleSetAmountIn}
+                           style={{width: "100%"}}/>
+              <Text size="xs" c="darkgray"> = {amountIn * prices[0]} ; {amountIn * prices[1]} ; {amountIn * prices[2]} {token2}</Text>
+              <Flex justify="space-between" style={{width: "100%"}} align="center">
 
-          {/*      {!tokensFromDex ? <Text size="xs">Received from*/}
-          {/*        DEX: </Text> : <Text size="xs">Received from*/}
-          {/*        DEX: {tokensFromDex} (- {((1 - (tokensFromDex / (amountIn * price))) * 100).toFixed(2)} %)</Text>}*/}
-          {/*      <Button size="xs" variant="outline" disabled={!amountIn} onClick={getTokensFromDex}>GET</Button>*/}
-          {/*    </Flex>*/}
-          {/*    <Button size="xs" variant="outline" disabled={!amountIn || !tokensFromDex}*/}
-          {/*            onClick={handleSwap}>SWAP</Button>*/}
-          {/*  </Stack>*/}
-          {/*</Popover.Dropdown>*/}
+                {!false ? <Text size="xs">Received from
+                  DEX: </Text> : <Text size="xs">Received from
+                  DEX: {1} (- {((1 - (1 / (amountIn * prices[0]))) * 100).toFixed(2)} %)</Text>}
+
+                <Button size="xs" variant="outline" disabled={!amountIn} onClick={() => null}>GET</Button>
+              </Flex>
+              <Button size="xs" variant="outline" disabled={true}
+                      onClick={() => null}>SWAP</Button>
+            </Stack>
+          </Popover.Dropdown>
         </Popover>
         : <Text size="xs" c="orange" className={style.tokens}>{token1}/{token2}</Text>
 

@@ -21,7 +21,7 @@ export const Arbitrage = () => {
   //
   // const filteredAvailablePairs = filteredCoins ? basicAvailablePairs.filter(p => p.includes(filteredCoins)) : basicAvailablePairs;
 
-  const coinsArray = availableTokens.filter(p => p !== basicToken);
+  const coinsArray = availableTokens.filter(p => (p !== basicToken) && p.includes(filteredCoins));
 
 
   const dexCoinsArray = coinsArray.map(p => ({
@@ -32,7 +32,7 @@ export const Arbitrage = () => {
   }));
 
 
-  console.log("coinsArray", availableTokens.filter(p => p !== basicToken), dexCoinsArray);
+  console.log("coinsArray", availableTokens.filter(p => p !== basicToken), dexCoinsArray, basicToken);
 
 
   // const dex2CoinsArray = filteredAvailablePairs.map(p => ({
