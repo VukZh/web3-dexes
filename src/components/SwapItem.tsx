@@ -53,7 +53,6 @@ export const SwapItem: FC<PairItemType> = ({
       setPrice(Number(Number(res) / 10 ** 10));
     } catch (e: ErrorType) {
       console.error(e);
-      console.log("err");
       setPrice(NaN);
       makeNotification(`Price ${token1} / ${token2} not found`);
     } finally {
@@ -72,7 +71,7 @@ export const SwapItem: FC<PairItemType> = ({
         abi: swapContractAbi,
         functionName: "getAmountsOut",
         // @ts-ignore
-        args: [swapRoutes[dex][chain], amountIn * 10 ** getDecimals(chain, token1), tokensAddresses[token1][chain], tokensAddresses[token2][chain]],
+        args: [swapRoutes[dex][chain], Math.floor(amountIn * 10 ** getDecimals(chain, token1)), tokensAddresses[token1][chain], tokensAddresses[token2][chain]],
       });
 
       // @ts-ignore
@@ -101,16 +100,8 @@ export const SwapItem: FC<PairItemType> = ({
     const to = walletAddress;
     const deadline = Math.floor(Number(new Date()) / 1000) + 60 * 10; // now + 10 minutes
 
-    console.log("router", router);
-    console.log("tokenIn", tokenIn);
-    console.log("tokenOut", tokenOut);
-    console.log("amountIn", _amountIn);
-    console.log("amountOutMin", amountOutMin);
-    console.log("to", to);
-    console.log("deadline", deadline);
+    console.log(">>>>>>>", _amountIn, amountOutMin)
 
-    const CCC = chain === "arbitrum" ? arbitrum : chain === "polygon" ? polygon : bsc
-    console.log("CCC", CCC);
 
     const clientWallet = createWalletClient({
       chain: chain === "arbitrum" ? arbitrum : chain === "polygon" ? polygon : bsc,
@@ -118,9 +109,7 @@ export const SwapItem: FC<PairItemType> = ({
     })
 
     const address = chain === "arbitrum" ? process.env.GET_PRICE_CONTRACT_ARBITRUM_ADDRESS : chain === "polygon" ? process.env.GET_PRICE_CONTRACT_POLYGON_ADDRESS : process.env.GET_PRICE_CONTRACT_BSC_ADDRESS;
-    console.log("address", address);
-
-    const gasLimit  = chain === "arbitrum" ? 462800n : chain === "polygon" ? 694200n : 55000n;
+    const gasLimit  = chain === "arbitrum" ? 470000n : chain === "polygon" ? 700000n : 55000n;
 
 
     try {
@@ -131,9 +120,6 @@ export const SwapItem: FC<PairItemType> = ({
       });
 
       const [account] = await clientWallet.getAddresses()
-
-      // const usdtChainAddress = chain === "arbitrum" ? tokensAddresses.USDT.arbitrum : chain === "polygon" ? tokensAddresses.USDT.polygon : tokensAddresses.USDT.bsc;
-      // const approvedAddress = chain === "arbitrum" ? process.env.GET_PRICE_CONTRACT_ARBITRUM_ADDRESS : chain === "polygon" ? process.env.GET_PRICE_CONTRACT_POLYGON_ADDRESS : process.env.GET_PRICE_CONTRACT_BSC_ADDRESS;
 
       const res = await clientWallet.writeContract({
         address: tokenIn as `0x${string}`,
@@ -154,7 +140,7 @@ export const SwapItem: FC<PairItemType> = ({
         functionName: 'swapTokens',
         account,
         args: [router, tokenIn, tokenOut, _amountIn, amountOutMin, to, deadline],
-        gas: BigInt(Number(gasLimit) * 1.4),
+        gas: BigInt(Math.floor(Number(gasLimit) * 2)),
       })
       console.log("res2", res2)
     } catch

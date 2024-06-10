@@ -2,7 +2,7 @@ import {SwapItem} from "./SwapItem.tsx";
 import {useDebouncedState} from "@mantine/hooks";
 import {TextInput, Text, Flex, Stack, Divider, Select} from "@mantine/core";
 import {IconSearch} from "@tabler/icons-react";
-import {availablePairs, availableTokens, dexesInChaines, tokensAddresses} from "../state/constants.ts";
+import {availableTokens, dexesInChaines, tokensAddresses} from "../state/constants.ts";
 import {useContext, useState} from "react";
 import {Context} from "../state/ContextProvider.tsx";
 import {ArbitrageItem} from "./ArbitrageItem.tsx";
@@ -17,10 +17,6 @@ export const Arbitrage = () => {
 
   const [basicToken, setBasicToken] = useState(tokensArray[0]);
 
-  // const basicAvailablePairs = availablePairs.filter(p => p.includes(basicToken));
-  //
-  // const filteredAvailablePairs = filteredCoins ? basicAvailablePairs.filter(p => p.includes(filteredCoins)) : basicAvailablePairs;
-
   const coinsArray = availableTokens.filter(p => (p !== basicToken) && p.includes(filteredCoins));
 
 
@@ -30,28 +26,6 @@ export const Arbitrage = () => {
     token1: basicToken.toUpperCase(),
     token2: p.toUpperCase(),
   }));
-
-
-  console.log("coinsArray", availableTokens.filter(p => p !== basicToken), dexCoinsArray, basicToken);
-
-
-  // const dex2CoinsArray = filteredAvailablePairs.map(p => ({
-  //   chain: activeChain.toLowerCase(),
-  //   dex: dexesInChaines[activeChain.toLowerCase()][1],
-  //   token1: p.split("-")[0],
-  //   token2: p.split("-")[1],
-  // }));
-  // const dex3CoinsArray = filteredAvailablePairs.map(p => ({
-  //   chain: activeChain.toLowerCase(),
-  //   dex: dexesInChaines[activeChain.toLowerCase()][2],
-  //   token1: p.split("-")[0],
-  //   token2: p.split("-")[1],
-  // }));
-  // console.log("filteredAvailablePairs", filteredAvailablePairs);
-
-  // useEffect(() => {
-  //   console.log("........ ", activeChain, dex1CoinsArray);
-  // }, [filteredCoins]);
 
   return (
     <>
@@ -93,36 +67,6 @@ export const Arbitrage = () => {
 
           ))}
         </Stack>
-        {/*<Stack*/}
-        {/*  h={"150%"}*/}
-        {/*  align="stretch"*/}
-        {/*  justify="flex-start"*/}
-        {/*  gap="xs"*/}
-        {/*>*/}
-        {/*  <Text c="teal" align="center">{(dexesInChaines[activeChain.toLowerCase()][1]).toUpperCase()}</Text>*/}
-        {/*  {dex2CoinsArray.map((coin, index) => !!tokensAddresses[coin.token1][coin.chain] && !!tokensAddresses[coin.token2][coin.chain] && (*/}
-        {/*    <>*/}
-        {/*      <SwapItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}*/}
-        {/*                token1={coin.token1} token2={coin.token2}></SwapItem>*/}
-        {/*      {(index % 2 != 0) && <Divider my="sm"/>}*/}
-        {/*    </>*/}
-        {/*  ))}*/}
-        {/*</Stack>*/}
-        {/*<Stack*/}
-        {/*  h={"150%"}*/}
-        {/*  align="stretch"*/}
-        {/*  justify="flex-start"*/}
-        {/*  gap="xs"*/}
-        {/*>*/}
-        {/*  <Text c="teal" align="center">{(dexesInChaines[activeChain.toLowerCase()][2]).toUpperCase()}</Text>*/}
-        {/*  {dex3CoinsArray.map((coin, index) => !!tokensAddresses[coin.token1][coin.chain] && !!tokensAddresses[coin.token2][coin.chain] && (*/}
-        {/*    <>*/}
-        {/*      <SwapItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}*/}
-        {/*                token1={coin.token1} token2={coin.token2}></SwapItem>*/}
-        {/*      {(index % 2 != 0) && <Divider my="sm"/>}*/}
-        {/*    </>*/}
-        {/*  ))}*/}
-        {/*</Stack>*/}
       </Flex>
 
     </>

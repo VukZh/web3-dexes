@@ -5,7 +5,7 @@ import {useContext} from "react";
 import {Context} from "../state/ContextProvider";
 import {Wallet} from "./Wallet.tsx";
 import {Swap} from "./Swap.tsx";
-import {GetAllPrices} from "./GetAllPrices.tsx";
+// import {GetAllPrices} from "./GetAllPrices.tsx";
 import {Arbitrage} from "./Arbitrage.tsx";
 
 export const RootComponent = () => {

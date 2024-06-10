@@ -31,11 +31,6 @@ export const Swap = () => {
     token1: p.split("-")[0],
     token2: p.split("-")[1],
   }));
-  // console.log("filteredAvailablePairs", filteredAvailablePairs);
-
-  // useEffect(() => {
-  //   console.log("........ ", activeChain, dex1CoinsArray);
-  // }, [filteredCoins]);
 
   return (
     <>
