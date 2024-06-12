@@ -1,5 +1,5 @@
-import {FC, useContext, useState} from "react";
-import {Button, Card, Flex, NumberInput, Popover, Stack, Text} from "@mantine/core";
+import {FC, useContext, useEffect, useState} from "react";
+import {Button, Card, Flex, NumberInput, Popover, Stack, Text, Progress} from "@mantine/core";
 import style from "./ArbitrageItem.module.css";
 import {dexesInChaines, swapFactories, tokensAddresses, swapRoutes} from "../state/constants.ts";
 import {createPublicClient, createWalletClient, custom, http} from "viem";
@@ -39,13 +39,30 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
     dex2: 0,
     ind: 0
   })
+  const [progress, setProgress] = useState(0);
+  const [progressIsUpdated, setProgressIsUpdated] = useState(false);
 
   const {walletAddress} = useContext(Context);
 
   const [dex0, dex1, dex2] = dexesInChaines[chain];
 
-  // @ts-ignore
-  // const pairExists = !!tokensAddresses[token1][chain] && !!tokensAddresses[token2][chain]
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => {
+        if (prevProgress <= 0) {
+          clearInterval(timer);
+          setProgressIsUpdated(false);
+          return 0;
+        }
+        return prevProgress - 1;
+      });
+    }, 100);
+
+    return () => {
+      clearInterval(timer);
+      setProgressIsUpdated(false);
+    };
+  }, [progressIsUpdated]);
 
 
   const getPrice = async () => {
@@ -97,6 +114,13 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
   }
 
   const getTokensFromDex = async () => {
+
+    if (progress === 0) {
+      setProgress(100);
+      setProgressIsUpdated(true);
+    }
+
+
     try {
       const publicClient = createPublicClient({
         chain: chain === "arbitrum" ? arbitrum : chain === "polygon" ? polygon : bsc,
@@ -285,7 +309,7 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
 
   }
 
-   return (<Card withBorder
+  return (<Card withBorder
                 padding="xs"
                 component="div" className={style.wrapper}>
     <Flex
@@ -346,7 +370,15 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
                       {!isNaN(getBackTokensFromDexes[5]) &&
                           <Text size="xs" c={betterPath.ind === 5 ? "green" : "white"}>
                             {" " + dex2.toUpperCase()} - {dex1.toUpperCase()} : {getBackTokensFromDexes[5]}</Text>}
-                        <Button size="xs" variant="outline" disabled={false}
+
+                        <Progress.Root size="16" value={100} style={{color:  "red"}}>
+                            <Progress.Section value={progress} color="lime">
+                                <Progress.Label></Progress.Label>
+                            </Progress.Section>
+                          {progress === 0 && <Text size="xs" pl={10}>need update</Text>}
+                        </Progress.Root>
+
+                        <Button size="xs" variant="outline" disabled={progress === 0}
                                 onClick={handleArbitrage}>Arbitrage</Button>
                     </Stack>}
 

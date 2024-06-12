@@ -1,6 +1,5 @@
-import {SwapItem} from "./SwapItem.tsx";
 import {useDebouncedState} from "@mantine/hooks";
-import {TextInput, Text, Flex, Stack, Divider, Select} from "@mantine/core";
+import {TextInput, Text, Flex, Stack, Select} from "@mantine/core";
 import {IconSearch} from "@tabler/icons-react";
 import {availableTokens, dexesInChaines, tokensAddresses} from "../state/constants.ts";
 import {useContext, useState} from "react";

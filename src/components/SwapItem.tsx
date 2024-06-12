@@ -1,5 +1,5 @@
-import {FC, useContext, useState} from "react";
-import {Button, Card, Flex, NumberInput, Popover, Stack, Text} from "@mantine/core";
+import {FC, useContext, useEffect, useState} from "react";
+import {Button, Card, Flex, NumberInput, Popover, Progress, Stack, Text} from "@mantine/core";
 import style from "./SwapItem.module.css";
 import {swapFactories, swapRoutes, tokensAddresses} from "../state/constants.ts";
 import {createPublicClient, createWalletClient, custom, http} from "viem";
@@ -28,6 +28,27 @@ export const SwapItem: FC<PairItemType> = ({
   const [loading, setLoading] = useState(false);
   const [amountIn, setAmountIn] = useState(0);
   const [tokensFromDex, setTokensFromDex] = useState<number>(0);
+
+  const [progress, setProgress] = useState(0);
+  const [progressIsUpdated, setProgressIsUpdated] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => {
+        if (prevProgress <= 0) {
+          clearInterval(timer);
+          setProgressIsUpdated(false);
+          return 0;
+        }
+        return prevProgress - 1;
+      });
+    }, 100);
+
+    return () => {
+      clearInterval(timer);
+      setProgressIsUpdated(false);
+    };
+  }, [progressIsUpdated]);
 
   const {walletAddress} = useContext(Context);
 
@@ -61,6 +82,12 @@ export const SwapItem: FC<PairItemType> = ({
   }
 
   const getTokensFromDex = async () => {
+
+    if (progress === 0) {
+      setProgress(100);
+      setProgressIsUpdated(true);
+    }
+
     try {
       const publicClient = createPublicClient({
         chain: chain === "arbitrum" ? arbitrum : chain === "polygon" ? polygon : bsc,
@@ -99,9 +126,6 @@ export const SwapItem: FC<PairItemType> = ({
     const amountOutMin = Math.floor(tokensFromDex * 10 ** getDecimals(chain, token2));
     const to = walletAddress;
     const deadline = Math.floor(Number(new Date()) / 1000) + 60 * 10; // now + 10 minutes
-
-    console.log(">>>>>>>", _amountIn, amountOutMin)
-
 
     const clientWallet = createWalletClient({
       chain: chain === "arbitrum" ? arbitrum : chain === "polygon" ? polygon : bsc,
@@ -182,7 +206,15 @@ export const SwapItem: FC<PairItemType> = ({
                   DEX: {tokensFromDex} (- {((1 - (tokensFromDex / (amountIn * price))) * 100).toFixed(2)} %)</Text>}
                 <Button size="xs" variant="outline" disabled={!amountIn} onClick={getTokensFromDex}>GET</Button>
               </Flex>
-              <Button size="xs" variant="outline" disabled={!amountIn || !tokensFromDex}
+
+              <Progress.Root size="16" value={100} style={{color:  "red", width: "100%"}}>
+                <Progress.Section value={progress} color="lime">
+                  <Progress.Label></Progress.Label>
+                </Progress.Section>
+                {progress === 0 && <Text size="xs" pl={10}>need update</Text>}
+              </Progress.Root>
+
+              <Button size="xs" variant="outline" disabled={!amountIn || !tokensFromDex || progress === 0}
                       onClick={handleSwap}>SWAP</Button>
             </Stack>
           </Popover.Dropdown>
