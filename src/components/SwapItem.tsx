@@ -4,6 +4,7 @@ import style from "./SwapItem.module.css";
 import {swapFactories, swapRoutes, tokensAddresses} from "../state/constants.ts";
 import {createPublicClient, createWalletClient, custom, http} from "viem";
 import {arbitrum, polygon, bsc} from "viem/chains";
+// @ts-ignore
 import {ErrorType} from "viem/_types/errors/utils";
 import {swapContractAbi} from "../helpers/swapAbi";
 import {makeNotification} from "../helpers/makeNotification.ts";
@@ -119,8 +120,11 @@ export const SwapItem: FC<PairItemType> = ({
 
   const handleSwap = async () => {
 
+    // @ts-ignore
     const router = swapRoutes[dex][chain];
+    // @ts-ignore
     const tokenIn = tokensAddresses[token1][chain];
+    // @ts-ignore
     const tokenOut = tokensAddresses[token2][chain];
     const _amountIn = Math.floor(amountIn * 10 ** getDecimals(chain, token1));
     const amountOutMin = Math.floor(tokensFromDex * 10 ** getDecimals(chain, token2));
@@ -129,6 +133,7 @@ export const SwapItem: FC<PairItemType> = ({
 
     const clientWallet = createWalletClient({
       chain: chain === "arbitrum" ? arbitrum : chain === "polygon" ? polygon : bsc,
+      // @ts-ignore
       transport: custom(window.ethereum!)
     })
 
@@ -207,7 +212,7 @@ export const SwapItem: FC<PairItemType> = ({
                 <Button size="xs" variant="outline" disabled={!amountIn} onClick={getTokensFromDex}>GET</Button>
               </Flex>
 
-              <Progress.Root size="16" value={100} style={{color:  "red", width: "100%"}}>
+              <Progress.Root size="16" style={{color:  "red", width: "100%"}}>
                 <Progress.Section value={progress} color="lime">
                   <Progress.Label></Progress.Label>
                 </Progress.Section>

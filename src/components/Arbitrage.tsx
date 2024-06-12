@@ -21,10 +21,12 @@ export const Arbitrage = () => {
 
   const dexCoinsArray = coinsArray.map(p => ({
     chain: activeChain.toLowerCase(),
+    // @ts-ignore
     dex: dexesInChaines[activeChain.toLowerCase()][0],
     token1: basicToken.toUpperCase(),
     token2: p.toUpperCase(),
   }));
+
 
   return (
     <>
@@ -34,6 +36,7 @@ export const Arbitrage = () => {
           placeholder="Pick token"
           data={tokensArray}
           value={basicToken}
+          // @ts-ignore
           onChange={(e) => setBasicToken(e)}
         />
         <TextInput
@@ -59,8 +62,12 @@ export const Arbitrage = () => {
           gap="xs"
         >
           <Text c="teal"
-                align="center">{(dexesInChaines[activeChain.toLowerCase()][0]).toUpperCase()} / {(dexesInChaines[activeChain.toLowerCase()][1]).toUpperCase()} / {(dexesInChaines[activeChain.toLowerCase()][2]).toUpperCase()}</Text>
-          {dexCoinsArray.map((coin) => !!tokensAddresses[coin.token1][coin.chain] && !!tokensAddresses[coin.token2][coin.chain] && (
+                ta="center">{
+            // @ts-ignore
+            (dexesInChaines[activeChain.toLowerCase()][0]).toUpperCase()} / {(dexesInChaines[activeChain.toLowerCase()][1]).toUpperCase()} / {(dexesInChaines[activeChain.toLowerCase()][2]).toUpperCase()}</Text>
+          {
+            // @ts-ignore
+            dexCoinsArray.map((coin) => !!tokensAddresses[coin.token1][coin.chain] && !!tokensAddresses[coin.token2][coin.chain] && (
             <ArbitrageItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain}
                            token1={coin.token1} token2={coin.token2}></ArbitrageItem>
 

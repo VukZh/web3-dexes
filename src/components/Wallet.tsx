@@ -1,5 +1,3 @@
-"use server";
-
 import {Button} from "@mantine/core";
 import {IconWallet} from "@tabler/icons-react";
 import {createWalletClient, custom} from "viem";
@@ -31,6 +29,7 @@ export const Wallet: FC = () => {
 
   const clientWallet = createWalletClient({
     chain: activeChain === "Polygon" ? polygon : activeChain === "Arbitrum" ? arbitrum : bsc,
+    // @ts-ignore
     transport: custom(window.ethereum!),
   });
 

@@ -13,20 +13,26 @@ export const Swap = () => {
 
 
   const filteredAvailablePairs = filteredCoins ? availablePairs.filter(p => p.includes(filteredCoins)) : availablePairs;
+
   const dex1CoinsArray = filteredAvailablePairs.map(p => ({
     chain: activeChain.toLowerCase(),
+    // @ts-ignore
     dex: dexesInChaines[activeChain.toLowerCase()][0],
     token1: p.split("-")[0],
     token2: p.split("-")[1],
   }));
+  // @ts-ignore
   const dex2CoinsArray = filteredAvailablePairs.map(p => ({
     chain: activeChain.toLowerCase(),
+    // @ts-ignore
     dex: dexesInChaines[activeChain.toLowerCase()][1],
     token1: p.split("-")[0],
     token2: p.split("-")[1],
   }));
+  // @ts-ignore
   const dex3CoinsArray = filteredAvailablePairs.map(p => ({
     chain: activeChain.toLowerCase(),
+    // @ts-ignore
     dex: dexesInChaines[activeChain.toLowerCase()][2],
     token1: p.split("-")[0],
     token2: p.split("-")[1],
@@ -57,7 +63,10 @@ export const Swap = () => {
           justify="flex-start"
           gap="xs"
         >
-          <Text c="teal" align="center">{(dexesInChaines[activeChain.toLowerCase()][0]).toUpperCase()}</Text>
+          <Text c="teal" ta="center">{
+            // @ts-ignore
+            (dexesInChaines[activeChain.toLowerCase()][0]).toUpperCase()
+          }</Text>
           {dex1CoinsArray.map((coin) => (
             <SwapItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}
                       token1={coin.token1} token2={coin.token2}></SwapItem>
@@ -69,7 +78,10 @@ export const Swap = () => {
           justify="flex-start"
           gap="xs"
         >
-          <Text c="teal" align="center">{(dexesInChaines[activeChain.toLowerCase()][1]).toUpperCase()}</Text>
+          <Text c="teal" ta="center">{
+            // @ts-ignore
+            (dexesInChaines[activeChain.toLowerCase()][1]).toUpperCase()
+          }</Text>
           {dex2CoinsArray.map((coin) => (
             <SwapItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}
                       token1={coin.token1} token2={coin.token2}></SwapItem>
@@ -81,7 +93,10 @@ export const Swap = () => {
           justify="flex-start"
           gap="xs"
         >
-          <Text c="teal" align="center">{(dexesInChaines[activeChain.toLowerCase()][2]).toUpperCase()}</Text>
+          <Text c="teal" ta="center">{
+            // @ts-ignore
+            (dexesInChaines[activeChain.toLowerCase()][2]).toUpperCase()
+          }</Text>
           {dex3CoinsArray.map((coin) => (
             <SwapItem key={coin.token1 + coin.token2 + activeChain} chain={coin.chain} dex={coin.dex}
                       token1={coin.token1} token2={coin.token2}></SwapItem>

@@ -4,6 +4,7 @@ import style from "./ArbitrageItem.module.css";
 import {dexesInChaines, swapFactories, tokensAddresses, swapRoutes} from "../state/constants.ts";
 import {createPublicClient, createWalletClient, custom, http} from "viem";
 import {arbitrum, polygon, bsc} from "viem/chains";
+// @ts-ignore
 import {ErrorType} from "viem/_types/errors/utils";
 import {swapContractAbi} from "../helpers/swapAbi";
 import {makeNotification} from "../helpers/makeNotification.ts";
@@ -25,9 +26,9 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
                                                        token1,
                                                        token2,
                                                      }) => {
-  const [prices, setPrices] = useState<number>([0, 0, 0]);
+  const [prices, setPrices] = useState<Array<number>>([0, 0, 0]);
   const [loading, setLoading] = useState(false);
-  const [amountIn, setAmountIn] = useState<Array<number>>(0);
+  const [amountIn, setAmountIn] = useState<number>(0);
   const [tokensFromDexes, setTokensFromDexes] = useState<Array<number>>([0, 0, 0]);
   const [getBackTokensFromDexes, setGetBackTokensFromDexes] = useState<Array<number>>([0, 0, 0, 0, 0, 0]);
   const [betterPath, setBetterPath] = useState<{
@@ -44,6 +45,7 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
 
   const {walletAddress} = useContext(Context);
 
+  // @ts-ignore
   const [dex0, dex1, dex2] = dexesInChaines[chain];
 
   useEffect(() => {
@@ -101,6 +103,7 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
 
 
       const res = await Promise.allSettled([res0, res1, res2]);
+      // @ts-ignore
       const resUpdated = res.map(r => Number(Number(r.value) / 10 ** 10));
       console.log("res", res);
       setPrices(resUpdated);
@@ -150,7 +153,7 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
         args: [swapRoutes[dex2][chain], amountIn * 10 ** getDecimals(chain, token1), tokensAddresses[token1][chain], tokensAddresses[token2][chain]],
       });
       const res = await Promise.allSettled([res0, res1, res2]);
-
+      // @ts-ignore
       const resUpdated = res.map(r => r?.value ? Number(r.value[1]) / (10 ** getDecimals(chain, token2)) : NaN);
 
       const res01back = publicClient.readContract({
@@ -203,6 +206,7 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
 
 
       const resBack = await Promise.allSettled([res01back, res02back, res10back, res12back, res20back, res21back]);
+      // @ts-ignore
       const resBackUpdated = resBack.map(r => r?.value ? Number(r.value[1]) / (10 ** getDecimals(chain, token1)) : NaN);
 
 
@@ -219,18 +223,24 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
   const handleSetAmountIn = (e: string | number) => {
     setTokensFromDexes([0, 0, 0])
     setGetBackTokensFromDexes([0, 0, 0, 0, 0, 0])
+    // @ts-ignore
     setAmountIn(e)
   }
 
   const handleArbitrage = async () => {
     const address = chain === "arbitrum" ? process.env.GET_PRICE_CONTRACT_ARBITRUM_ADDRESS : chain === "polygon" ? process.env.GET_PRICE_CONTRACT_POLYGON_ADDRESS : process.env.GET_PRICE_CONTRACT_BSC_ADDRESS;
+    // @ts-ignore
     const tokenIn = tokensAddresses[token1][chain];
+    // @ts-ignore
     const tokenOut = tokensAddresses[token2][chain];
+    // @ts-ignore
     const _amountIn = Math.floor(amountIn * 10 ** getDecimals(chain, token1));
     const fixedNanTokensFromDexes = tokensFromDexes.map(t => isNaN(t) ? 0 : t);
     const amountInMinAgain = Math.floor(Math.max(...getBackTokensFromDexes) * 10 ** getDecimals(chain, token1))
     const amountOutMin = Math.floor(Math.max(...fixedNanTokensFromDexes) * 10 ** getDecimals(chain, token2))
+    // @ts-ignore
     const router1 = swapRoutes[dexesInChaines[chain][betterPath.dex1]][chain];
+    // @ts-ignore
     const router2 = swapRoutes[dexesInChaines[chain][betterPath.dex2]][chain];
     const gasLimit = chain === "arbitrum" ? 470000n : chain === "polygon" ? 700000n : 55000n;
     const deadline = Math.floor(Number(new Date()) / 1000) + 60 * 10; // now + 10 minutes
@@ -238,6 +248,7 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
 
     const clientWallet = createWalletClient({
       chain: chain === "arbitrum" ? arbitrum : chain === "polygon" ? polygon : bsc,
+      // @ts-ignore
       transport: custom(window.ethereum!)
     })
     const to = walletAddress;
@@ -371,7 +382,7 @@ export const ArbitrageItem: FC<ArbitrageItemType> = ({
                           <Text size="xs" c={betterPath.ind === 5 ? "green" : "white"}>
                             {" " + dex2.toUpperCase()} - {dex1.toUpperCase()} : {getBackTokensFromDexes[5]}</Text>}
 
-                        <Progress.Root size="16" value={100} style={{color:  "red"}}>
+                        <Progress.Root size="16" style={{color:  "red"}}>
                             <Progress.Section value={progress} color="lime">
                                 <Progress.Label></Progress.Label>
                             </Progress.Section>
